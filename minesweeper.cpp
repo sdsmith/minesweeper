@@ -7,17 +7,31 @@
 
 constexpr char mine_val = std::numeric_limits<char>::max();
 
-using Board = std::vector<std::vector<char>>;
+class Grid {
+private:
+    std::vector<std::vector<char>> m_board;
 
-void update_mine_adjacent_counts(Board& board, int x, int y)
+public:
+    Grid(int length, int width) : m_board(length, std::vector<char>(width)) {
+        assert(length > 0);
+        assert(width > 0);
+    }
+
+    int length() const { return static_cast<int>(m_board.size()); }
+    int width() const { return static_cast<int>(m_board[0].size()); }
+
+    char get(int x, int y) const { return m_board[y][x]; }
+    char& get(int x, int y) { return m_board[y][x]; }
+    void set(int x, int y, char val) { m_board[y][x] = val; }
+};
+
+void update_mine_adjacent_counts(Grid& board, int x, int y)
 {
-    const size_t length = board.size();
-    assert(length > 0);
-    const size_t width = board[0].size();
-    assert(width > 0);
+    const int width = board.width();
+    const int length = board.length();
 
-    assert(x >= 0 && static_cast<size_t>(x) < width);
-    assert(y >= 0 && static_cast<size_t>(y) < width);
+    assert(x >= 0 && x < width);
+    assert(y >= 0 && y < length);
 
     for (int dy = -1; dy <= 1; ++dy) {
         for (int dx = -1; dx <= 1; ++dx) {
@@ -28,24 +42,24 @@ void update_mine_adjacent_counts(Board& board, int x, int y)
             const int adj_y = y + dy;
 
             // Board bounds check
-            if ((adj_x < 0) || (static_cast<size_t>(adj_x) >= width) ||
-                (adj_y < 0) || (static_cast<size_t>(adj_y) >= length))
+            if ((adj_x < 0) || (adj_x >= width) ||
+                (adj_y < 0) || (adj_y >= length))
             {
                 continue;
             }
 
             // Don't update mine locations
-            if (board[adj_y][adj_x] == mine_val) { continue; }
+            if (board.get(adj_x, adj_y) == mine_val) { continue; }
 
-            board[adj_y][adj_x]++;
+            board.get(adj_x, adj_y)++;
         }
     }
 }
 
-Board gen_board(int length, int width, int num_mines) {
+Grid gen_board(int length, int width, int num_mines) {
     assert(length * width >= num_mines);
 
-    Board board(length, std::vector<char>(width));
+    Grid board(length, width);
 
     std::random_device rd;
     std::mt19937 rand_gen(rd());
@@ -57,8 +71,8 @@ Board gen_board(int length, int width, int num_mines) {
             const int x = width_dis(rand_gen);
             const int y = length_dis(rand_gen);
 
-            if (board[y][x] != mine_val) {
-                board[y][x] = mine_val;
+            if (board.get(x, y) != mine_val) {
+                board.set(x, y, mine_val);
                 update_mine_adjacent_counts(board, x, y);
                 break;
             }
@@ -68,19 +82,13 @@ Board gen_board(int length, int width, int num_mines) {
     return board;
 }
 
-void print_board(const Board& board) {
-    // TODO(stewarts): make Board a class already
-    const size_t length = board.size();
-    assert(length > 0);
-    const size_t width = board[0].size();
-    assert(width > 0);
-
+void print_board(const Grid& board) {
     std::string s;
 
-    for (size_t y = 0; y < length; ++y) {
-        for (size_t x = 0; x < width; ++x) {
+    for (int y = 0; y < board.length(); ++y) {
+        for (int x = 0; x < board.width(); ++x) {
             char c;
-            switch (board[y][x]) {
+            switch (board.get(x, y)) {
                 case 0:
                     c = ' ';
                     break;
@@ -88,7 +96,7 @@ void print_board(const Board& board) {
                     c = 'X';
                     break;
                 default:
-                    c = static_cast<char>(board[y][x] + '0');
+                    c = static_cast<char>(board.get(x, y) + '0');
                     break;
             }
 
@@ -108,7 +116,7 @@ static constexpr double mine_percent = 0.1;
 static constexpr int num_mines = static_cast<int>(board_length * board_width * mine_percent);
 
 int main(int argc, char* argv[]) {
-    Board board = gen_board(board_length, board_width, num_mines);
+    Grid board = gen_board(board_length, board_width, num_mines);
     print_board(board);
     return 0;
 }

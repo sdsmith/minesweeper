@@ -60,6 +60,20 @@ ifeq ($(findstring clang,$(CXX)),clang)
 #LDFLAGS := $(filter-out -pthread,$(CXXFLAGS))
 LDFLAGS += -Wno-unused-command-line-argument
 endif
+
+### SDL
+SDL_LIB = -L/usr/local/lib -lSDL2 -Wl,-rpath=/usr/local/lib
+SDL_INCLUDE = -I/usr/local/include
+CXXFLAGS += $(SDL_INCLUDE)
+LDFLAGS += $(SDL_LIB)
+
+### OpenGL
+GL_LIB = -DGLEW_STATIC -lGLEW -lGL
+LDFLAGS += $(GL_LIB)
+
+### External libs
+CXXFLAGS += -isystem ./extern
+
 ################################################################################
 
 # Whitelist build types
@@ -70,7 +84,7 @@ else
 $(error Unknown build type. Use one of debug,release)
 endif
 
-SOURCE_DIR = .
+SOURCE_DIR = src
 INCLUDE_DIRS := -I$(SOURCE_DIR)
 CPP_FILES := $(shell find $(SOURCE_DIR) -name '*.cpp')
 OBJ_FILES = $(addprefix $(BUILD_PATH)/,$(CPP_FILES:%.cpp=%.o))

@@ -60,13 +60,25 @@ Sdl2::create_open_gl_rendering_context(char const* window_name,
                         "failed to set OpenGL rending context to window: %s\n", SDL_GetError());
     }
 
+    enum Swap_Interval : s8
+    {
+        immediate = 0,
+        vertical_retrace_sync = 1,
+        adaptive_vsync = -1
+    };
+
     // Turn off VSync - it will be controlled from the renderer
-    if (SDL_GL_SetSwapInterval(0) < 0)
+    if (SDL_GL_SetSwapInterval(Swap_Interval::immediate) < 0)
+    {
+        SDL_LogDebug(SDL_LOG_CATEGORY_SYSTEM,
+                     "SDL failed to set GL swap interval to immeidate, falling "
+                     "back on veritcal retrace synchronization\n");
+    }
+    else if (SDL_GL_SetSwapInterval(Swap_Interval::vertical_retrace_sync) < 0)
     {
         SDL_LogCritical(SDL_LOG_CATEGORY_VIDEO,
                         "failed to set swap interval: %s\n", SDL_GetError());
     }
-
 }
 
 void

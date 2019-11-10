@@ -29,10 +29,11 @@ OpenGl::OpenGl(char const* window_name, Platform* platform) : platform(platform)
 
     // NOTE(sdsmith): GLEW may return GL_INVALID_ENUM error (issue with openGL
     // core profile and glew). Reset the error flag in case this occurs.
-    GLenum error = glGetError();
-    if (error != GL_INVALID_ENUM) {
+    GLenum gl_error = glGetError();
+    if (gl_error != GL_NO_ERROR && gl_error != GL_INVALID_ENUM) {
         // An unexpected GL error occured from GLEW
         std::cout << "ERROR::OPENGL::INIT::GLEW::UNEXPECTED_GL_ERROR" << std::endl;
+        throw new std::system_error(std::error_code(), "Unexpected OpenGL init failure\n"); // TODO(stewarts): better error handling
     }
 
     // Disbale Vsync by default

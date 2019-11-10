@@ -9,10 +9,10 @@
 
 class ShaderFile {
 public:
-    ShaderFile(std::string const &file_path);
-    ~ShaderFile(void);
+    ShaderFile(std::string file_path);
+    ~ShaderFile();
 
-    GLuint get_id(void) const;
+    GLuint get_id() const;
     
 protected:
     std::string file_path;
@@ -38,11 +38,11 @@ class Shader {
 public:
     Shader(std::string const &vertex_file_path, std::string const &fragment_file_path);
     Shader(VertexShader const &vertex_shader, FragmentShader const &fragment_shader);
-    ~Shader(void);
+    ~Shader();
 
-    GLuint get_id(void) const;
-    void enable(void);
-    static void disable(void);
+    GLuint get_id() const;
+    void enable();
+    static void disable();
     
 private:
     GLuint program_id;

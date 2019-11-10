@@ -2,9 +2,10 @@
 
 #include "renderer/opengl.h"
 #include <iostream>
+#include <utility>
 
-ShaderFile::ShaderFile(std::string const &file_path)
-    : file_path(file_path), shader_id(0) {}
+ShaderFile::ShaderFile(std::string file_path)
+    : file_path(std::move(file_path)), shader_id(0) {}
 
 ShaderFile::~ShaderFile() {
     glDeleteShader(shader_id);
@@ -38,7 +39,7 @@ ShaderFile::compile_shader(GLenum shader_type) {
     // Compile shader
     const GLchar* cstr_code = static_cast<const GLchar*>(code.c_str());
     shader_id = glCreateShader(shader_type);
-    GL_CHECK(glShaderSource(shader_id, 1, &cstr_code, NULL));
+    GL_CHECK(glShaderSource(shader_id, 1, &cstr_code, nullptr));
     GL_CHECK(glCompileShader(shader_id));
 
     // Check compilation status
@@ -48,7 +49,7 @@ ShaderFile::compile_shader(GLenum shader_type) {
         GLint log_length;
         GL_CHECK(glGetShaderiv(shader_id, GL_INFO_LOG_LENGTH, &log_length));
         GLchar info_log[log_length];
-        GL_CHECK(glGetShaderInfoLog(shader_id, log_length, NULL, info_log));
+        GL_CHECK(glGetShaderInfoLog(shader_id, log_length, nullptr, info_log));
         std::cout << "ERROR::SHADER::FILE::COMPILATION_FAILED\n" << info_log << std::endl;
     }
 }
@@ -82,7 +83,7 @@ Shader::Shader(VertexShader const &vertex_shader, FragmentShader const &fragment
         GLint log_length;
         GL_CHECK(glGetProgramiv(program_id, GL_INFO_LOG_LENGTH, &log_length));
         GLchar info_log[log_length];
-        GL_CHECK(glGetProgramInfoLog(program_id, log_length, NULL, info_log));
+        GL_CHECK(glGetProgramInfoLog(program_id, log_length, nullptr, info_log));
         std::cout <<"ERROR::SHADER::PROGRAM::LINK_FAILED\n" << info_log << std::endl;
     }
 }

@@ -86,7 +86,7 @@ Grid gen_board(s32 length, s32 width, s32 num_mines) {
     std::uniform_int_distribution<> width_dis(0, width - 1);
 
     for (s32 n = 0; n < num_mines; ++n) {
-        while (1) {
+        while (true) {
             const s32 x = width_dis(rand_gen);
             const s32 y = length_dis(rand_gen);
 

@@ -148,7 +148,7 @@ OpenGl::proto_setup() {
         GL_CHECK(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW));
 
         // Set position attribute
-        GL_CHECK(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), static_cast<GLvoid*>(0)));
+        GL_CHECK(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), static_cast<GLvoid*>(nullptr)));
         GL_CHECK(glEnableVertexAttribArray(0));
         GL_CHECK(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), reinterpret_cast<GLvoid*>(3 * sizeof(GLfloat))));
         GL_CHECK(glEnableVertexAttribArray(1));
@@ -258,7 +258,7 @@ OpenGl::proto_draw() {
     GL_CHECK(glUniform1i(glGetUniformLocation(shader->get_id(), "tex2"), 1));
 
     GL_CHECK(glBindVertexArray(vao));
-    GL_CHECK(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
+    GL_CHECK(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
     GL_CHECK(glBindVertexArray(0));
 }
 

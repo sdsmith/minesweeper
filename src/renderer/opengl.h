@@ -33,12 +33,12 @@ public:
     OpenGl(const OpenGl& o) = delete;
 
     static bool check_gl_error(std::string const &description, std::string const &file, std::size_t const line);
-    void clear_screen();
-    void swap_buffer();
+    void clear_screen() override;
+    void swap_buffer() override;
     void set_vsync(bool enable);
-    void set_window_size(u32 w, u32 h);
-    void proto_setup();
-    void proto_draw();
+    void set_window_size(u32 w, u32 h) override;
+    void proto_setup() override;
+    void proto_draw() override;
 
     OpenGl& operator=(const OpenGl& o) = delete;
 };

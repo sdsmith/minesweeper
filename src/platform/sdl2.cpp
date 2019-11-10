@@ -3,7 +3,7 @@
 #include <system_error>
 
 Sdl2::Sdl2()
-    : window(nullptr), gl_context(nullptr), input(), new_input(input), old_input(input + 1) {
+    :  input(), new_input(input), old_input(input + 1) {
 
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         throw new std::system_error(std::error_code(),

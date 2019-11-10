@@ -7,6 +7,7 @@
 #include <GL/glew.h>
 #include <string>
 #include <cstddef>
+#include <limits>
 
 #ifdef _DEBUG
 #define CHECK_GL_ERROR(description) OpenGL::checkGLError(description, __FILE__, __LINE__)
@@ -21,7 +22,7 @@ private:
     Platform* platform;
 
     // TEMP
-    GLuint vao = -1;
+    GLuint vao = std::numeric_limits<GLuint>::max();
     Shader* shader = nullptr;
     GLuint textures[2];
 

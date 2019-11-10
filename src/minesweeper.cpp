@@ -18,7 +18,8 @@ private:
     std::vector<std::vector<char>> m_board;
 
 public:
-    Grid(s32 length, s32 width) : m_board(length, std::vector<char>(width)) {
+    Grid(s32 length, s32 width) : m_board(static_cast<u32>(length),
+                                          std::vector<char>(static_cast<u32>(width))) {
         assert(length > 0);
         assert(width > 0);
     }
@@ -26,9 +27,21 @@ public:
     s32 length() const { return static_cast<s32>(m_board.size()); }
     s32 width() const { return static_cast<s32>(m_board[0].size()); }
 
-    char get(s32 x, s32 y) const { return m_board[y][x]; }
-    char& get(s32 x, s32 y) { return m_board[y][x]; }
-    void set(s32 x, s32 y, char val) { m_board[y][x] = val; }
+    char get(s32 x, s32 y) const {
+        assert(x >= 0);
+        assert(y >= 0);
+        return m_board[static_cast<u32>(y)][static_cast<u32>(x)];
+    }
+    char& get(s32 x, s32 y) {
+        assert(x >= 0);
+        assert(y >= 0);
+        return m_board[static_cast<u32>(y)][static_cast<u32>(x)];
+    }
+    void set(s32 x, s32 y, char val) {
+        assert(x >= 0);
+        assert(y >= 0);
+        m_board[static_cast<u32>(y)][static_cast<u32>(x)] = val;
+    }
 };
 
 void update_mine_adjacent_counts(Grid& board, s32 x, s32 y)
@@ -116,7 +129,7 @@ void print_board(const Grid& board) {
     printf("%s\n", s.c_str());
 }
 
-void update(const Game_Input* input) {
+void update(const Game_Input*) {
     // TODO(stewarts):
 }
 
@@ -130,7 +143,7 @@ static constexpr s32 board_width = 80;
 static constexpr f64 mine_percent = 0.1;
 static constexpr s32 num_mines = static_cast<s32>(board_length * board_width * mine_percent);
 
-int main(int argc, char* argv[]) {
+int main(int, char*[]) {
     Grid board = gen_board(board_length, board_width, num_mines);
     print_board(board);
 
@@ -139,7 +152,7 @@ int main(int argc, char* argv[]) {
     Game_Input* input;
     bool running = true;
 
-    // Performance stats
+    // performance stats
     u64 perfSysStartFrame;
     u64 perfSysCount;
     f64 perfSysTimeMs;

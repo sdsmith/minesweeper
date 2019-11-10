@@ -175,7 +175,7 @@ OpenGl::proto_setup() {
 
 
     // Load image
-    int tex_width, tex_height, bytes_per_pixel;
+    int tex_width = 0, tex_height = 0, bytes_per_pixel = 0;
     unsigned char* image = stbi_load("source/renderer/textures/container.jpg",
                                      &tex_width, &tex_height, &bytes_per_pixel, 0);
     if (image == nullptr) {

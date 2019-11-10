@@ -180,7 +180,6 @@ int main(int, char*[]) {
 
         if (input->state.toggle_pause) {
             pause = !pause;
-            printf("STEWART: toggling pause to %s\n", pause ? "true" : "false");
         }
 
         if (!pause)

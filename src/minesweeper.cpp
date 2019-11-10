@@ -26,10 +26,10 @@ public:
         assert(width > 0);
     }
 
-    s32 length() const { return static_cast<s32>(m_board.size()); }
-    s32 width() const { return static_cast<s32>(m_board[0].size()); }
+    [[nodiscard]] s32 length() const { return static_cast<s32>(m_board.size()); }
+    [[nodiscard]] s32 width() const { return static_cast<s32>(m_board[0].size()); }
 
-    char get(s32 x, s32 y) const
+    [[nodiscard]] char get(s32 x, s32 y) const
     {
         assert(x >= 0);
         assert(y >= 0);

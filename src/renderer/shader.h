@@ -13,7 +13,7 @@ public:
     ShaderFile(std::string file_path);
     ~ShaderFile();
 
-    GLuint get_id() const;
+    [[nodiscard]] GLuint get_id() const;
 
 protected:
     std::string file_path;
@@ -40,7 +40,7 @@ public:
            FragmentShader const &fragment_shader);
     ~Shader();
 
-    GLuint get_id() const;
+    [[nodiscard]] GLuint get_id() const;
     void enable();
     static void disable();
 

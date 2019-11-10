@@ -19,8 +19,8 @@
 
 
 
-OpenGl::OpenGl(Platform *platform) : platform(platform) {
-    platform->create_open_gl_rendering_context(3, 3, 640, 480);
+OpenGl::OpenGl(char const* window_name, Platform* platform) : platform(platform) {
+    platform->create_open_gl_rendering_context(window_name, 3, 3, 640, 480);
 
     // Enable expiremental functionality
     glewExperimental = GL_TRUE;
@@ -116,7 +116,7 @@ OpenGl::proto_setup() {
     VertexShader v_shader("source/renderer/shaders/basic.vert");
     FragmentShader f_shader("source/renderer/shaders/basic.frag");
 
-    shader = new Shader(v_shader, f_shader);
+    shader = std::make_unique<Shader>(v_shader, f_shader);
 
     // Set up vertex data (and buffer(s)) and attribute pointers
     GLfloat constexpr vertices[] = {

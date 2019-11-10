@@ -11,8 +11,9 @@ public:
     Sdl2(const Sdl2& o) = delete;
     ~Sdl2() override;
 
-    void create_open_gl_rendering_context(s32 gl_major_version, s32 gl_minor_version,
-                                      s32 window_width, s32 window_height) override;
+    void create_open_gl_rendering_context(char const* window_name,
+                                          s32 gl_major_version, s32 gl_minor_version,
+                                          s32 window_width, s32 window_height) override;
     void swap_window_buffer() override;
     void process_sys_event_queue() override;
     Game_Input* get_input() override;

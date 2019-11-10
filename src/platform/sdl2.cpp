@@ -28,9 +28,10 @@ Sdl2::set_window_size(u32 w, u32 h) {
 }
 
 void
-Sdl2::create_open_gl_rendering_context(s32 gl_major_version, s32 gl_minor_version,
-                                   s32 window_width, s32 window_height) {
-    window = SDL_CreateWindow("RUINATION",
+Sdl2::create_open_gl_rendering_context(char const* window_name,
+                                       s32 gl_major_version, s32 gl_minor_version,
+                                       s32 window_width, s32 window_height) {
+    window = SDL_CreateWindow(window_name,
                               SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
                               window_width, window_height,
                               SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_SHOWN);

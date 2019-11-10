@@ -145,10 +145,10 @@ static constexpr s32 num_mines = static_cast<s32>(board_length * board_width * m
 
 int main(int, char*[]) {
     Grid board = gen_board(board_length, board_width, num_mines);
-    print_board(board);
+    //print_board(board);
 
-    std::unique_ptr<Platform> platform = std:: make_unique<Sdl2>();
-    std::unique_ptr<Renderer> renderer = std::make_unique<OpenGl>(platform.get());
+    std::unique_ptr<Platform> platform = std::make_unique<Sdl2>();
+    std::unique_ptr<Renderer> renderer = std::make_unique<OpenGl>("Minesweeper", platform.get());
     Game_Input* input;
     bool running = true;
 
@@ -187,7 +187,7 @@ int main(int, char*[]) {
         perf_process_time_ms = (static_cast<f64>(perf_process_count) * 1000.0) / static_cast<f64>(perf_frequency);
         perf_fps = static_cast<s32>(1 / (perf_sys_time_ms / 1000));
         perf_sys_start_frame = perf_end_frame;
-        printf("frame: %fms (%fms in process) (%d fps)\n", perf_sys_time_ms, perf_process_time_ms, perf_fps);
+        //printf("frame: %fms (%fms in process) (%d fps)\n", perf_sys_time_ms, perf_process_time_ms, perf_fps);
     }
 
     return 0;

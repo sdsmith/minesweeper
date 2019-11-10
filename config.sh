@@ -3,5 +3,5 @@
 mkdir -p artifacts >/dev/null
 pushd . >/dev/null
 cd artifacts >/dev/null
-cmake ..
+cmake $* ..
 popd >/dev/null

@@ -5,9 +5,7 @@
 
 using Controller_ID = std::size_t;
 
-enum Controller {
-    keyboard = 0
-};
+enum Controller { keyboard = 0 };
 
 struct Game_Input_Button {
     bool started_down;

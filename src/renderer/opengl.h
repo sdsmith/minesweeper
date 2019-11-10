@@ -11,8 +11,13 @@
 #include <string>
 
 #ifdef _DEBUG
-#define CHECK_GL_ERROR(description) OpenGL::checkGLError(description, __FILE__, __LINE__)
-#define GL_CHECK(statement) do { statement; CHECK_GL_ERROR(#statement); } while (0)
+#define CHECK_GL_ERROR(description) \
+    OpenGL::checkGLError(description, __FILE__, __LINE__)
+#define GL_CHECK(statement)         \
+    do {                            \
+        statement;                  \
+        CHECK_GL_ERROR(#statement); \
+    } while (0)
 #else
 #define CHECK_GL_ERROR(description)
 #define GL_CHECK(statement) statement
@@ -31,10 +36,11 @@ private:
     GLfloat calc_frustum_scale(GLfloat fov_degree);
 
 public:
-    OpenGl(char const* window_name, Platform *platform);
+    OpenGl(char const* window_name, Platform* platform);
     OpenGl(const OpenGl& o) = delete;
 
-    static bool check_gl_error(std::string const &description, std::string const &file, std::size_t const line);
+    static bool check_gl_error(std::string const& description,
+                               std::string const& file, std::size_t const line);
     void clear_screen() override;
     void swap_buffer() override;
     void set_vsync(bool enable);

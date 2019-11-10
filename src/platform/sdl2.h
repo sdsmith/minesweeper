@@ -1,7 +1,7 @@
 #pragma once
 
-#include "platform.h"
 #include "input.h"
+#include "platform.h"
 #include "types.h"
 #include <SDL2/SDL.h>
 
@@ -12,8 +12,10 @@ public:
     ~Sdl2() override;
 
     void create_open_gl_rendering_context(char const* window_name,
-                                          s32 gl_major_version, s32 gl_minor_version,
-                                          s32 window_width, s32 window_height) override;
+                                          s32 gl_major_version,
+                                          s32 gl_minor_version,
+                                          s32 window_width,
+                                          s32 window_height) override;
     void swap_window_buffer() override;
     void process_sys_event_queue() override;
     Game_Input* get_input() override;
@@ -28,10 +30,12 @@ private:
     SDL_Window* window{nullptr};
     SDL_GLContext gl_context{nullptr};
 
-    Game_Input input[2]; // TODO(sdsmith): confirm 0-initialization via the constructor initialization list
+    Game_Input input[2]; // TODO(sdsmith): confirm 0-initialization via the
+                         // constructor initialization list
     Game_Input* new_input;
     Game_Input* old_input;
-    static const Game_Input zeroed_input; // TODO(sdsmith): confirm 0-initializaton
+    static const Game_Input
+        zeroed_input; // TODO(sdsmith): confirm 0-initializaton
 
     void prepare_for_new_input();
     void process_window_event(SDL_WindowEvent* event);

@@ -133,8 +133,10 @@ void update(const Game_Input*) {
     // TODO(stewarts):
 }
 
-void render() {
+void render(Renderer* renderer) {
     // TODO(stewarts):
+    renderer->proto_draw();
+    renderer->swap_buffer();
 }
 
 
@@ -151,6 +153,7 @@ int main(int, char*[]) {
     std::unique_ptr<Renderer> renderer = std::make_unique<OpenGl>("Minesweeper", platform.get());
     Game_Input* input;
     bool running = true;
+    bool pause = false;
 
     // performance stats
     u64 perf_sys_start_frame;
@@ -175,19 +178,27 @@ int main(int, char*[]) {
         input = platform->get_input();
         running = !input->state.request_quit;
 
-        // Update game state and render
-        update(input);
-        render();
+        if (input->state.toggle_pause) {
+            pause = !pause;
+            printf("STEWART: toggling pause to %s\n", pause ? "true" : "false");
+        }
 
-        // Performance logging
-        perf_end_frame = platform->get_performance_counter();
-        perf_sys_count = perf_end_frame - perf_sys_start_frame;
-        perf_process_count = perf_end_frame - perf_process_start_frame;
-        perf_sys_time_ms = (static_cast<f64>(perf_sys_count) * 1000.0) / static_cast<f64>(perf_frequency);
-        perf_process_time_ms = (static_cast<f64>(perf_process_count) * 1000.0) / static_cast<f64>(perf_frequency);
-        perf_fps = static_cast<s32>(1 / (perf_sys_time_ms / 1000));
-        perf_sys_start_frame = perf_end_frame;
-        //printf("frame: %fms (%fms in process) (%d fps)\n", perf_sys_time_ms, perf_process_time_ms, perf_fps);
+        if (!pause)
+        {
+            // Update game state and render
+            update(input);
+            render(renderer.get());
+
+            // Performance logging
+            perf_end_frame = platform->get_performance_counter();
+            perf_sys_count = perf_end_frame - perf_sys_start_frame;
+            perf_process_count = perf_end_frame - perf_process_start_frame;
+            perf_sys_time_ms = (static_cast<f64>(perf_sys_count) * 1000.0) / static_cast<f64>(perf_frequency);
+            perf_process_time_ms = (static_cast<f64>(perf_process_count) * 1000.0) / static_cast<f64>(perf_frequency);
+            perf_fps = static_cast<s32>(1 / (perf_sys_time_ms / 1000));
+            perf_sys_start_frame = perf_end_frame;
+            printf("frame: %fms (%fms in process) (%d fps)\n", perf_sys_time_ms, perf_process_time_ms, perf_fps);
+        }
     }
 
     return 0;

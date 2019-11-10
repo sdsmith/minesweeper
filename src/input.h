@@ -29,6 +29,7 @@ struct Game_Input_Controller {
 
 struct Game_State {
     bool request_quit;
+    bool toggle_pause;
 };
 
 struct Game_Input {

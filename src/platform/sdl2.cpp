@@ -131,8 +131,12 @@ Sdl2::prepare_for_new_input() {
     // Save old input state
     std::swap(new_input, old_input);
 
+    Game_State& new_game_state = new_input->state;
     Game_Input_Controller* new_keyboard = &new_input->controllers[Controller::keyboard];
     Game_Input_Controller* old_keyboard = &old_input->controllers[Controller::keyboard];
+
+    // Reset toggles
+    new_game_state.toggle_pause = false;
 
     // Zero the new keyboard
     *new_keyboard = zeroed_input.controllers[0];
@@ -141,7 +145,9 @@ Sdl2::prepare_for_new_input() {
     Game_Input_Button* old_button;
 
     for (std::size_t button_index = 0;
-         button_index < sizeof(new_keyboard->buttons)/sizeof(new_keyboard->buttons[0]); button_index++) {
+         button_index < sizeof(new_keyboard->buttons)/sizeof(new_keyboard->buttons[0]);
+         button_index++)
+    {
         new_button = &new_keyboard->buttons[button_index];
         old_button = &old_keyboard->buttons[button_index];
 
@@ -232,24 +238,32 @@ Sdl2::process_window_event(SDL_WindowEvent* event) {
 
 void
 Sdl2::process_keyboard_event(SDL_Event* event, bool key_down) {
-    Game_Input_Controller* keyboard = &new_input->controllers[Controller::keyboard];
-    SDL_Keycode key = event->key.keysym.sym;
+    Game_Input_Controller& keyboard = new_input->controllers[Controller::keyboard];
+    Game_State& game_state = new_input->state;
+    const SDL_Keycode key = event->key.keysym.sym;
 
     switch(key) {
     case SDLK_w: {
-        process_input_button(&keyboard->up, key_down);
+        process_input_button(&keyboard.up, key_down);
     } break;
 
     case SDLK_a: {
-        process_input_button(&keyboard->left, key_down);
+        process_input_button(&keyboard.left, key_down);
     } break;
 
     case SDLK_s: {
-        process_input_button(&keyboard->down, key_down);
+        process_input_button(&keyboard.down, key_down);
     } break;
 
     case SDLK_d: {
-        process_input_button(&keyboard->right, key_down);
+        process_input_button(&keyboard.right, key_down);
+    } break;
+
+    case SDLK_p: {
+        if (!key_down)
+        {
+            game_state.toggle_pause = true;
+        }
     } break;
 
     default: {

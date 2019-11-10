@@ -9,22 +9,22 @@
 
 class ShaderFile {
 public:
-    ShaderFile(std::string const &filePath);
+    ShaderFile(std::string const &file_path);
     ~ShaderFile(void);
 
-    GLuint getID(void) const;
+    GLuint get_id(void) const;
     
 protected:
-    std::string filePath;
-    GLuint shaderID;
+    std::string file_path;
+    GLuint shader_id;
 
-    void compileShader(GLenum shaderType);
+    void compile_shader(GLenum shader_type);
 };
 
 
 class VertexShader : public ShaderFile {
 public:
-    VertexShader(std::string const &filePath);
+    VertexShader(std::string const &file_path);
 };
 
 
@@ -36,16 +36,16 @@ public:
 
 class Shader {
 public:
-    Shader(std::string const &vertexFilePath, std::string const &fragmentFilePath);
-    Shader(VertexShader const &vertexShader, FragmentShader const &fragmentShader);
+    Shader(std::string const &vertex_file_path, std::string const &fragment_file_path);
+    Shader(VertexShader const &vertex_shader, FragmentShader const &fragment_shader);
     ~Shader(void);
 
-    GLuint getID(void) const;
+    GLuint get_id(void) const;
     void enable(void);
     static void disable(void);
     
 private:
-    GLuint programID;
+    GLuint program_id;
 };
 
 #endif

@@ -20,7 +20,7 @@
 
 
 OpenGl::OpenGl(Platform *platform) : platform(platform) {
-    platform->createOpenGlRenderingContext(3, 3, 640, 480);
+    platform->create_open_gl_rendering_context(3, 3, 640, 480);
 
     // Enable expiremental functionality
     glewExperimental = GL_TRUE;
@@ -36,12 +36,12 @@ OpenGl::OpenGl(Platform *platform) : platform(platform) {
     }
 
     // Disbale Vsync by default
-    setVsync(true);
+    set_vsync(true);
 }
 
 
 bool
-OpenGl::checkGlError(std::string const &description, std::string const &file, std::size_t const line) {
+OpenGl::check_gl_error(std::string const &description, std::string const &file, std::size_t const line) {
     GLenum error = glGetError();
     std::string log;
 
@@ -98,25 +98,25 @@ OpenGl::checkGlError(std::string const &description, std::string const &file, st
 
 
 void
-OpenGl::setWindowSize(u32 w, u32 h) {
-    platform->setWindowSize(w, h);
+OpenGl::set_window_size(u32 w, u32 h) {
+    platform->set_window_size(w, h);
 }
 
 
 void
-OpenGl::clearScreen() {
+OpenGl::clear_screen() {
     GL_CHECK(glClearColor(1.0, 0.0, 0.5, 1.0));
     GL_CHECK(glClear(GL_COLOR_BUFFER_BIT));
 }
 
 
 void
-OpenGl::protoSetup() {
+OpenGl::proto_setup() {
     // Build and compile our shader program
-    VertexShader vShader("source/renderer/shaders/basic.vert");
-    FragmentShader fShader("source/renderer/shaders/basic.frag");
+    VertexShader v_shader("source/renderer/shaders/basic.vert");
+    FragmentShader f_shader("source/renderer/shaders/basic.frag");
 
-    shader = new Shader(vShader, fShader);
+    shader = new Shader(v_shader, f_shader);
 
     // Set up vertex data (and buffer(s)) and attribute pointers
     GLfloat constexpr vertices[] = {
@@ -131,20 +131,20 @@ OpenGl::protoSetup() {
         1, 2, 3    // Second Triangle
     };
 
-    GLuint VBO;
-    GLuint EBO;
-    GL_CHECK(glGenBuffers(1, &VBO));
-    GL_CHECK(glGenBuffers(1, &EBO));
+    GLuint vbo;
+    GLuint ebo;
+    GL_CHECK(glGenBuffers(1, &vbo));
+    GL_CHECK(glGenBuffers(1, &ebo));
     GL_CHECK(glGenVertexArrays(1, &vao));
     // Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s).
     GL_CHECK(glBindVertexArray(vao));
     {
         // Copy vertices to vertex buffer
-        GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, VBO));
+        GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, vbo));
         GL_CHECK(glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW));
 
         // Copy indices to element buffer
-        GL_CHECK(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO));
+        GL_CHECK(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo));
         GL_CHECK(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW));
 
         // Set position attribute
@@ -175,14 +175,14 @@ OpenGl::protoSetup() {
 
 
     // Load image
-    int texWidth, texHeight, bytesPerPixel;
+    int tex_width, tex_height, bytes_per_pixel;
     unsigned char* image = stbi_load("source/renderer/textures/container.jpg",
-                                     &texWidth, &texHeight, &bytesPerPixel, 0);
+                                     &tex_width, &tex_height, &bytes_per_pixel, 0);
     if (image == nullptr) {
         std::cout << "ERROR::TEXTURE::IMAGE::LOAD_FAILED" << std::endl;
     }
     // Generate texture
-    GL_CHECK(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texWidth, texHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, image));
+    GL_CHECK(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, tex_width, tex_height, 0, GL_RGB, GL_UNSIGNED_BYTE, image));
     // Generate mipmap
     GL_CHECK(glGenerateMipmap(GL_TEXTURE_2D));
     // Cleanup
@@ -203,12 +203,12 @@ OpenGl::protoSetup() {
     // Load image
     stbi_set_flip_vertically_on_load(true); // flip the image
     image = stbi_load("source/renderer/textures/awesomeface.jpg",
-                      &texWidth, &texHeight, &bytesPerPixel, 0);
+                      &tex_width, &tex_height, &bytes_per_pixel, 0);
     if (image == nullptr) {
         std::cout << "ERROR::TEXTURE::IMAGE::LOAD_FAILED" << std::endl;
     }
     // Generate texture
-    GL_CHECK(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texWidth, texHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, image));
+    GL_CHECK(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, tex_width, tex_height, 0, GL_RGB, GL_UNSIGNED_BYTE, image));
     // Generate mipmap
     GL_CHECK(glGenerateMipmap(GL_TEXTURE_2D));
     // Cleanup
@@ -241,7 +241,7 @@ OpenGl::protoSetup() {
 
 
 void
-OpenGl::protoDraw() {
+OpenGl::proto_draw() {
     // Render
     // Clear the colorbuffer
     GL_CHECK(glClearColor(0.2f, 0.3f, 0.3f, 1.0f));
@@ -252,10 +252,10 @@ OpenGl::protoDraw() {
     // Bind texture with texture units
     GL_CHECK(glActiveTexture(GL_TEXTURE0));
     GL_CHECK(glBindTexture(GL_TEXTURE_2D, textures[0]));
-    GL_CHECK(glUniform1i(glGetUniformLocation(shader->getID(), "tex1"), 0));
+    GL_CHECK(glUniform1i(glGetUniformLocation(shader->get_id(), "tex1"), 0));
     GL_CHECK(glActiveTexture(GL_TEXTURE1));
     GL_CHECK(glBindTexture(GL_TEXTURE_2D, textures[1]));
-    GL_CHECK(glUniform1i(glGetUniformLocation(shader->getID(), "tex2"), 1));
+    GL_CHECK(glUniform1i(glGetUniformLocation(shader->get_id(), "tex2"), 1));
 
     GL_CHECK(glBindVertexArray(vao));
     GL_CHECK(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
@@ -264,23 +264,23 @@ OpenGl::protoDraw() {
 
 
 GLfloat
-OpenGl::calcFrustumScale(GLfloat fovDegree)
+OpenGl::calc_frustum_scale(GLfloat fov_degree)
 {
-    const GLfloat degreeToRadian = static_cast<GLfloat>(M_PI * 2.0f / 360.0f);
-    GLfloat fovRadian = fovDegree * degreeToRadian;
+    const GLfloat degree_to_radian = static_cast<GLfloat>(M_PI * 2.0f / 360.0f);
+    GLfloat fov_radian = fov_degree * degree_to_radian;
 
-    return 1.0f / tan(fovRadian / 2.0f);
+    return 1.0f / tan(fov_radian / 2.0f);
 }
 
 
 void
-OpenGl::swapBuffer() {
-    platform->swapWindowBuffer();
+OpenGl::swap_buffer() {
+    platform->swap_window_buffer();
 }
 
 
 void
-OpenGl::setVsync(bool enable) {
+OpenGl::set_vsync(bool enable) {
     // NOTE(sdsmith): By setting swap interval to 1, it implies setting it to 1 video frame
     // period (ie. the time required by the monitor to display a full frame of video data).
 

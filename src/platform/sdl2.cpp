@@ -3,7 +3,7 @@
 #include <system_error>
 
 Sdl2::Sdl2()
-    : window(nullptr), glContext(nullptr), input(), newInput(input), oldInput(input + 1) {
+    : window(nullptr), gl_context(nullptr), input(), new_input(input), old_input(input + 1) {
 
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         throw new std::system_error(std::error_code(),
@@ -15,24 +15,24 @@ Sdl2::Sdl2()
 }
 
 Sdl2::~Sdl2() {
-    SDL_GL_DeleteContext(glContext);
+    SDL_GL_DeleteContext(gl_context);
     SDL_DestroyWindow(window);
     SDL_Quit();
 }
 
-constexpr Game_Input Sdl2::zeroedInput = {};
+constexpr Game_Input Sdl2::zeroed_input = {};
 
 void
-Sdl2::setWindowSize(u32 w, u32 h) {
+Sdl2::set_window_size(u32 w, u32 h) {
     SDL_SetWindowSize(window, static_cast<int>(w), static_cast<int>(h));
 }
 
 void
-Sdl2::createOpenGlRenderingContext(s32 glMajorVersion, s32 glMinorVersion,
-                                   s32 windowWidth, s32 windowHeight) {
+Sdl2::create_open_gl_rendering_context(s32 gl_major_version, s32 gl_minor_version,
+                                   s32 window_width, s32 window_height) {
     window = SDL_CreateWindow("RUINATION",
                               SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                              windowWidth, windowHeight,
+                              window_width, window_height,
                               SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_SHOWN);
     if (window == nullptr) {
         SDL_LogCritical(SDL_LOG_CATEGORY_SYSTEM,
@@ -46,15 +46,15 @@ Sdl2::createOpenGlRenderingContext(s32 glMajorVersion, s32 glMinorVersion,
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
     // Set OpenGL version
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, glMajorVersion);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, glMinorVersion);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, gl_major_version);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, gl_minor_version);
 
     // Double buffer
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
     // Link rendering context
-    glContext = SDL_GL_CreateContext(window);
-    if (glContext == nullptr) {
+    gl_context = SDL_GL_CreateContext(window);
+    if (gl_context == nullptr) {
         SDL_LogCritical(SDL_LOG_CATEGORY_VIDEO,
                         "failed to set OpenGL rending context to window: %s\n", SDL_GetError());
     }
@@ -69,17 +69,17 @@ Sdl2::createOpenGlRenderingContext(s32 glMajorVersion, s32 glMinorVersion,
 }
 
 void
-Sdl2::swapWindowBuffer() {
+Sdl2::swap_window_buffer() {
     SDL_GL_SwapWindow(window);
 }
 
 void
-Sdl2::processSysEventQueue() {
-    Game_State* state = &newInput->state;
+Sdl2::process_sys_event_queue() {
+    Game_State* state = &new_input->state;
     SDL_Event event;
 
     // Setup for new system input
-    prepareForNewInput();
+    prepare_for_new_input();
 
     // Loop through waiting events
     while(SDL_PollEvent(&event))
@@ -91,15 +91,15 @@ Sdl2::processSysEventQueue() {
         } break;
 
 	case SDL_KEYDOWN: {
-            processKeyboardEvent(&event, true);
+            process_keyboard_event(&event, true);
         } break;
 
 	case SDL_KEYUP: {
-            processKeyboardEvent(&event, false);
+            process_keyboard_event(&event, false);
         } break;
 
 	case SDL_WINDOWEVENT: {
-            processWindowEvent(&event.window);
+            process_window_event(&event.window);
         } break;
 
 	default: {
@@ -109,57 +109,57 @@ Sdl2::processSysEventQueue() {
 }
 
 Game_Input*
-Sdl2::getInput() {
-    return newInput;
+Sdl2::get_input() {
+    return new_input;
 }
 
 void
-Sdl2::prepareForNewInput() {
+Sdl2::prepare_for_new_input() {
     // Save old input state
-    std::swap(newInput, oldInput);
+    std::swap(new_input, old_input);
 
-    Game_Input_Controller* newKeyboard = &newInput->controllers[Controller::keyboard];
-    Game_Input_Controller* oldKeyboard = &oldInput->controllers[Controller::keyboard];
+    Game_Input_Controller* new_keyboard = &new_input->controllers[Controller::keyboard];
+    Game_Input_Controller* old_keyboard = &old_input->controllers[Controller::keyboard];
 
     // Zero the new keyboard
-    *newKeyboard = zeroedInput.controllers[0];
+    *new_keyboard = zeroed_input.controllers[0];
 
-    Game_Input_Button* newButton;
-    Game_Input_Button* oldButton;
+    Game_Input_Button* new_button;
+    Game_Input_Button* old_button;
 
-    for (std::size_t buttonIndex = 0;
-         buttonIndex < sizeof(newKeyboard->buttons)/sizeof(newKeyboard->buttons[0]); buttonIndex++) {
-        newButton = &newKeyboard->buttons[buttonIndex];
-        oldButton = &oldKeyboard->buttons[buttonIndex];
+    for (std::size_t button_index = 0;
+         button_index < sizeof(new_keyboard->buttons)/sizeof(new_keyboard->buttons[0]); button_index++) {
+        new_button = &new_keyboard->buttons[button_index];
+        old_button = &old_keyboard->buttons[button_index];
 
         // We start down if we ended down on last input
-        newButton->started_down = oldButton->ended_down;
+        new_button->started_down = old_button->ended_down;
 
         // Since input has not been processed yet, there are no half transitions
         // ie. We ended down if we started down (updated during input processing)
-        newButton->ended_down = newButton->started_down;
+        new_button->ended_down = new_button->started_down;
     }
 }
 
 u32
-Sdl2::getTicks() {
+Sdl2::get_ticks() {
     return SDL_GetTicks();
 }
 
 u64
-Sdl2::getPerformanceFrequency() {
+Sdl2::get_performance_frequency() {
     return SDL_GetPerformanceFrequency();
 }
 
 u64
-Sdl2::getPerformanceCounter() {
+Sdl2::get_performance_counter() {
     return SDL_GetPerformanceCounter();
 }
 
 void
-Sdl2::processWindowEvent(SDL_WindowEvent* event) {
+Sdl2::process_window_event(SDL_WindowEvent* event) {
     // TODO(sdsmith): port
-    Game_State* state = &newInput->state;
+    Game_State* state = &new_input->state;
 
     if (SDL_GetWindowID(window) == event->windowID)
     {
@@ -218,25 +218,25 @@ Sdl2::processWindowEvent(SDL_WindowEvent* event) {
 }
 
 void
-Sdl2::processKeyboardEvent(SDL_Event* event, bool key_down) {
-    Game_Input_Controller* keyboard = &newInput->controllers[Controller::keyboard];
+Sdl2::process_keyboard_event(SDL_Event* event, bool key_down) {
+    Game_Input_Controller* keyboard = &new_input->controllers[Controller::keyboard];
     SDL_Keycode key = event->key.keysym.sym;
 
     switch(key) {
     case SDLK_w: {
-        processInputButton(&keyboard->up, key_down);
+        process_input_button(&keyboard->up, key_down);
     } break;
 
     case SDLK_a: {
-        processInputButton(&keyboard->left, key_down);
+        process_input_button(&keyboard->left, key_down);
     } break;
 
     case SDLK_s: {
-        processInputButton(&keyboard->down, key_down);
+        process_input_button(&keyboard->down, key_down);
     } break;
 
     case SDLK_d: {
-        processInputButton(&keyboard->right, key_down);
+        process_input_button(&keyboard->right, key_down);
     } break;
 
     default: {
@@ -245,7 +245,7 @@ Sdl2::processKeyboardEvent(SDL_Event* event, bool key_down) {
 }
 
 void
-Sdl2::processInputButton(Game_Input_Button* button, bool button_down)
+Sdl2::process_input_button(Game_Input_Button* button, bool button_down)
 {
     button->ended_down = button_down;
     button->half_transitions++;

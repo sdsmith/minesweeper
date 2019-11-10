@@ -9,5 +9,5 @@ if ! [[ -f compile_commands.json ]]; then
     exit 0
 fi
 
-find ../src -regex '.*\.\(cpp\)' -exec clang-tidy $* {} \;
+find ../src -regex '.*\.\(cpp\)' -exec clang-tidy --header-filter=../src $* {} \;
 popd >/dev/null

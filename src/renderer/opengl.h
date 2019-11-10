@@ -26,19 +26,19 @@ private:
     Shader* shader = nullptr;
     GLuint textures[2];
 
-    GLfloat calcFrustumScale(GLfloat fovDegree);
+    GLfloat calc_frustum_scale(GLfloat fov_degree);
 
 public:
     OpenGl(Platform *platform);
     OpenGl(const OpenGl& o) = delete;
 
-    static bool checkGlError(std::string const &description, std::string const &file, std::size_t const line);
-    void clearScreen();
-    void swapBuffer();
-    void setVsync(bool enable);
-    void setWindowSize(u32 w, u32 h);
-    void protoSetup();
-    void protoDraw();
+    static bool check_gl_error(std::string const &description, std::string const &file, std::size_t const line);
+    void clear_screen();
+    void swap_buffer();
+    void set_vsync(bool enable);
+    void set_window_size(u32 w, u32 h);
+    void proto_setup();
+    void proto_draw();
 
     OpenGl& operator=(const OpenGl& o) = delete;
 };

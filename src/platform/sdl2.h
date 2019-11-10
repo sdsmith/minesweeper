@@ -11,29 +11,29 @@ public:
     Sdl2(const Sdl2& o) = delete;
     ~Sdl2();
 
-    void createOpenGlRenderingContext(s32 glMajorVersion, s32 glMinorVersion,
-                                      s32 windowWidth, s32 windowHeight);
-    void swapWindowBuffer(void);
-    void processSysEventQueue(void);
-    Game_Input* getInput(void);
-    u32 getTicks(void);
-    u64 getPerformanceFrequency(void);
-    u64 getPerformanceCounter(void);
-    void setWindowSize(u32 w, u32 h);
+    void create_open_gl_rendering_context(s32 gl_major_version, s32 gl_minor_version,
+                                      s32 window_width, s32 window_height);
+    void swap_window_buffer(void);
+    void process_sys_event_queue(void);
+    Game_Input* get_input(void);
+    u32 get_ticks(void);
+    u64 get_performance_frequency(void);
+    u64 get_performance_counter(void);
+    void set_window_size(u32 w, u32 h);
 
     Sdl2& operator=(const Sdl2& o) = delete;
 
 private:
     SDL_Window* window;
-    SDL_GLContext glContext;
+    SDL_GLContext gl_context;
 
     Game_Input input[2]; // TODO(sdsmith): confirm 0-initialization via the constructor initialization list
-    Game_Input* newInput;
-    Game_Input* oldInput;
-    static const Game_Input zeroedInput; // TODO(sdsmith): confirm 0-initializaton
+    Game_Input* new_input;
+    Game_Input* old_input;
+    static const Game_Input zeroed_input; // TODO(sdsmith): confirm 0-initializaton
 
-    void prepareForNewInput(void);
-    void processWindowEvent(SDL_WindowEvent* event);
-    void processKeyboardEvent(SDL_Event* event, bool keyDown);
-    void processInputButton(Game_Input_Button* button, bool buttonDown);
+    void prepare_for_new_input(void);
+    void process_window_event(SDL_WindowEvent* event);
+    void process_keyboard_event(SDL_Event* event, bool key_down);
+    void process_input_button(Game_Input_Button* button, bool button_down);
 };

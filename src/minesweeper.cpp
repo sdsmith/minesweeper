@@ -153,26 +153,26 @@ int main(int, char*[]) {
     bool running = true;
 
     // performance stats
-    u64 perfSysStartFrame;
-    u64 perfSysCount;
-    f64 perfSysTimeMs;
-    u64 perfProcessStartFrame;
-    u64 perfProcessCount;
-    f64 perfProcessTimeMs;
-    u64 perfEndFrame;
-    s32 perfFps;
-    u64 perfFrequency = platform->getPerformanceFrequency();
-    perfSysStartFrame = platform->getPerformanceCounter();
+    u64 perf_sys_start_frame;
+    u64 perf_sys_count;
+    f64 perf_sys_time_ms;
+    u64 perf_process_start_frame;
+    u64 perf_process_count;
+    f64 perf_process_time_ms;
+    u64 perf_end_frame;
+    s32 perf_fps;
+    u64 perf_frequency = platform->get_performance_frequency();
+    perf_sys_start_frame = platform->get_performance_counter();
 
-    renderer->protoSetup();
+    renderer->proto_setup();
 
     while (running) {
         // System process specific performance logging
-        perfProcessStartFrame = platform->getPerformanceCounter();
+        perf_process_start_frame = platform->get_performance_counter();
 
         // Collect system event information
-        platform->processSysEventQueue();
-        input = platform->getInput();
+        platform->process_sys_event_queue();
+        input = platform->get_input();
         running = !input->state.request_quit;
 
         // Update game state and render
@@ -180,14 +180,14 @@ int main(int, char*[]) {
         render();
 
         // Performance logging
-        perfEndFrame = platform->getPerformanceCounter();
-        perfSysCount = perfEndFrame - perfSysStartFrame;
-        perfProcessCount = perfEndFrame - perfProcessStartFrame;
-        perfSysTimeMs = (static_cast<f64>(perfSysCount) * 1000.0) / static_cast<f64>(perfFrequency);
-        perfProcessTimeMs = (static_cast<f64>(perfProcessCount) * 1000.0) / static_cast<f64>(perfFrequency);
-        perfFps = static_cast<s32>(1 / (perfSysTimeMs / 1000));
-        perfSysStartFrame = perfEndFrame;
-        printf("frame: %fms (%fms in process) (%d fps)\n", perfSysTimeMs, perfProcessTimeMs, perfFps);
+        perf_end_frame = platform->get_performance_counter();
+        perf_sys_count = perf_end_frame - perf_sys_start_frame;
+        perf_process_count = perf_end_frame - perf_process_start_frame;
+        perf_sys_time_ms = (static_cast<f64>(perf_sys_count) * 1000.0) / static_cast<f64>(perf_frequency);
+        perf_process_time_ms = (static_cast<f64>(perf_process_count) * 1000.0) / static_cast<f64>(perf_frequency);
+        perf_fps = static_cast<s32>(1 / (perf_sys_time_ms / 1000));
+        perf_sys_start_frame = perf_end_frame;
+        printf("frame: %fms (%fms in process) (%d fps)\n", perf_sys_time_ms, perf_process_time_ms, perf_fps);
     }
 
     return 0;

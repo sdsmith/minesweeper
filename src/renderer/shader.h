@@ -6,6 +6,7 @@
 #include <fstream>
 #include <sstream>
 
+// TODO(stewarts): Why do most of these functions return void???
 
 class ShaderFile {
 public:
@@ -13,7 +14,7 @@ public:
     ~ShaderFile();
 
     GLuint get_id() const;
-    
+
 protected:
     std::string file_path;
     GLuint shader_id;
@@ -43,7 +44,7 @@ public:
     GLuint get_id() const;
     void enable();
     static void disable();
-    
+
 private:
     GLuint program_id;
 };

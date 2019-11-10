@@ -18,6 +18,7 @@
 #define GL_CHECK(statement) statement
 #endif
 
+// TODO(stewarts): Why do most of these functions return void???
 class OpenGl : public Renderer {
 private:
     Platform* platform;

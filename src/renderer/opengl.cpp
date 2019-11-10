@@ -114,8 +114,8 @@ OpenGl::clear_screen() {
 void
 OpenGl::proto_setup() {
     // Build and compile our shader program
-    VertexShader v_shader("source/renderer/shaders/basic.vert");
-    FragmentShader f_shader("source/renderer/shaders/basic.frag");
+    VertexShader v_shader("res/shaders/basic.vert");
+    FragmentShader f_shader("res/shaders/basic.frag");
 
     shader = std::make_unique<Shader>(v_shader, f_shader);
 
@@ -177,7 +177,7 @@ OpenGl::proto_setup() {
 
     // Load image
     int tex_width = 0, tex_height = 0, bytes_per_pixel = 0;
-    unsigned char* image = stbi_load("source/renderer/textures/container.jpg",
+    unsigned char* image = stbi_load("res/textures/container.jpg",
                                      &tex_width, &tex_height, &bytes_per_pixel, 0);
     if (image == nullptr) {
         std::cout << "ERROR::TEXTURE::IMAGE::LOAD_FAILED" << std::endl;
@@ -203,7 +203,7 @@ OpenGl::proto_setup() {
 
     // Load image
     stbi_set_flip_vertically_on_load(true); // flip the image
-    image = stbi_load("source/renderer/textures/awesomeface.jpg",
+    image = stbi_load("res/textures/awesomeface.jpg",
                       &tex_width, &tex_height, &bytes_per_pixel, 0);
     if (image == nullptr) {
         std::cout << "ERROR::TEXTURE::IMAGE::LOAD_FAILED" << std::endl;

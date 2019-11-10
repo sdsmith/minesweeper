@@ -26,6 +26,11 @@ ShaderFile::compile_shader(GLenum shader_type) {
     try {
         // Read contents of file into buffer
         shader_file.open(file_path);
+        if (shader_file.fail()) {
+            std::cout << "ERROR::SHADER::FILE - Failed to open '" << file_path << "'\n";
+            return;
+        }
+
         std::stringstream stream;
         stream << shader_file.rdbuf();
         shader_file.close();

@@ -159,56 +159,61 @@ int main(int, char*[])
     std::unique_ptr<Platform> platform = std::make_unique<Sdl2>();
     std::unique_ptr<Renderer> renderer =
         std::make_unique<OpenGl>("Minesweeper", platform.get());
-    Game_Input* input;
     bool running = true;
     bool pause = false;
 
-    // performance stats
+    // Performance stats
     u64 perf_sys_start_frame;
     u64 perf_sys_count;
-    f64 perf_sys_time_ms;
+    f32 perf_sys_time_ms;
     u64 perf_process_start_frame;
     u64 perf_process_count;
-    f64 perf_process_time_ms;
+    f32 perf_process_time_ms;
     u64 perf_end_frame;
     s32 perf_fps;
     u64 perf_frequency = platform->get_performance_frequency();
-    perf_sys_start_frame = platform->get_performance_counter();
+
+    constexpr f32 target_fps = 60.0f;
+    constexpr f32 target_frame_time_ms = 1000.0f / target_fps;
 
     renderer->proto_setup();
 
     while (running) {
-        // System process specific performance logging
+        perf_sys_start_frame = platform->get_performance_counter();
         perf_process_start_frame = platform->get_performance_counter();
 
-        // Collect system event information
-        platform->process_sys_event_queue();
-        input = platform->get_input();
-        running = !input->state.request_quit;
+        f32 frame_time_ms = 0.0f;
+        do {
+            // Collect system event information
+            platform->process_sys_event_queue();
+            Game_Input const* input = platform->get_input();
+            running = !input->state.request_quit;
+            if (!running) { break; }
 
-        if (input->state.toggle_pause) {
-            pause = !pause;
-        }
+            if (input->state.toggle_pause) { pause = !pause; }
+            if (pause) { continue; }
 
-        if (!pause) {
-            // Update game state and render
             update(input);
-            render(renderer.get());
 
-            // Performance logging
-            perf_end_frame = platform->get_performance_counter();
-            perf_sys_count = perf_end_frame - perf_sys_start_frame;
-            perf_process_count = perf_end_frame - perf_process_start_frame;
-            perf_sys_time_ms = (static_cast<f64>(perf_sys_count) * 1000.0) /
-                               static_cast<f64>(perf_frequency);
-            perf_process_time_ms =
-                (static_cast<f64>(perf_process_count) * 1000.0) /
-                static_cast<f64>(perf_frequency);
-            perf_fps = static_cast<s32>(1 / (perf_sys_time_ms / 1000));
-            perf_sys_start_frame = perf_end_frame;
-            printf("frame: %fms (%fms in process) (%d fps)\n", perf_sys_time_ms,
-                   perf_process_time_ms, perf_fps);
-        }
+            frame_time_ms =
+                static_cast<f32>((static_cast<f64>(platform->get_performance_counter() - perf_sys_start_frame) * 1000.0) /
+                                 static_cast<f64>(perf_frequency));
+        } while (frame_time_ms < target_frame_time_ms);
+
+        render(renderer.get());
+
+        perf_end_frame = platform->get_performance_counter();
+        perf_sys_count = perf_end_frame - perf_sys_start_frame;
+        perf_sys_time_ms = static_cast<f32>((static_cast<f64>(perf_sys_count) * 1000.0) /
+                                            static_cast<f64>(perf_frequency));
+        perf_process_count = perf_end_frame - perf_process_start_frame;
+        perf_process_time_ms =
+            static_cast<f32>((static_cast<f64>(perf_process_count) * 1000.0) /
+                             static_cast<f64>(perf_frequency));
+        perf_fps = static_cast<s32>(1 / (perf_sys_time_ms / 1000));
+        perf_sys_start_frame = perf_end_frame;
+        printf("frame: %fms (%fms in process) (%d fps)\n", perf_sys_time_ms,
+               perf_process_time_ms, perf_fps);
     }
 
     return 0;

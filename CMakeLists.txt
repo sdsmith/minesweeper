@@ -44,7 +44,7 @@ target_include_directories(minesweeper PUBLIC src)
 
 # Compiler config
 #
-set(GENERIC_CXX_FLAGS "-std=c++17 -pthread -fPIC -Wall -Werror -Wextra -Weffc++ -Wfloat-equal -Werror-implicit-function-declaration -Wundef -Wpointer-arith -Wcast-align -Wstrict-overflow=4 -Wwrite-strings -Wno-unused-result")
+set(GENERIC_CXX_FLAGS "-std=c++17 -g -Og -pthread -fPIC -Wall -Werror -Wextra -Weffc++ -Wfloat-equal -Werror-implicit-function-declaration -Wundef -Wpointer-arith -Wcast-align -Wstrict-overflow=4 -Wwrite-strings -Wno-unused-result")
 # Remove noisy warnings
 set(GENERIC_CXX_FLAGS "${GENERIC_CXX_FLAGS} -Wcast-qual -Wswitch-default -Wswitch-enum -Wconversion -Wunreachable-code")
 

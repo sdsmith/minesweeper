@@ -3,6 +3,7 @@
 #include "renderer/opengl.h"
 #include <iostream>
 #include <utility>
+#include <vector>
 
 ShaderFile::ShaderFile(std::string file_path)
     : file_path(std::move(file_path)), shader_id(0)
@@ -51,10 +52,10 @@ void ShaderFile::compile_shader(GLenum shader_type)
     if (!success) {
         GLint log_length;
         GL_CHECK(glGetShaderiv(shader_id, GL_INFO_LOG_LENGTH, &log_length));
-        GLchar info_log[log_length];
-        GL_CHECK(glGetShaderInfoLog(shader_id, log_length, nullptr, info_log));
+        std::vector<GLchar> info_log(log_length, '\0');
+        GL_CHECK(glGetShaderInfoLog(shader_id, log_length, nullptr, info_log.data()));
         std::cout << "ERROR::SHADER::FILE::COMPILATION_FAILED\n"
-                  << info_log << std::endl;
+                  << info_log.data() << std::endl;
     }
 }
 
@@ -95,11 +96,11 @@ Shader::Shader(VertexShader const &vertex_shader,
     if (!success) {
         GLint log_length;
         GL_CHECK(glGetProgramiv(program_id, GL_INFO_LOG_LENGTH, &log_length));
-        GLchar info_log[log_length];
+        std::vector<GLchar> info_log(log_length, '\0');
         GL_CHECK(
-            glGetProgramInfoLog(program_id, log_length, nullptr, info_log));
+            glGetProgramInfoLog(program_id, log_length, nullptr, info_log.data()));
         std::cout << "ERROR::SHADER::PROGRAM::LINK_FAILED\n"
-                  << info_log << std::endl;
+                  << info_log.data() << std::endl;
     }
 }
 

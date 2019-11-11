@@ -12,7 +12,7 @@
 
 #ifdef _DEBUG
 #    define CHECK_GL_ERROR(description) \
-        OpenGL::checkGLError(description, __FILE__, __LINE__)
+        OpenGl::check_gl_error(description, __FILE__, __LINE__)
 #    define GL_CHECK(statement)         \
         do {                            \
             statement;                  \

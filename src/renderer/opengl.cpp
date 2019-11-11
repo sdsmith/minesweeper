@@ -291,7 +291,7 @@ void OpenGl::set_vsync(bool enable)
 
 #ifdef _WIN32
     if (WGLEW_EXT_swap_control) {
-        GL_CHECK(wglSwapIntervalExt(interval));
+        GL_CHECK(wglSwapIntervalEXT(interval));
     }
 #elif __linux__
     if (GLXEW_EXT_swap_control) {

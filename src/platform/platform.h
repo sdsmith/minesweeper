@@ -4,6 +4,10 @@
 #include "types.h"
 #include <cstdio>
 
+#if defined(_WIN32)
+#   include <Windows.h>
+#endif
+
 /**
    Platform interface.
 
@@ -29,4 +33,9 @@ public:
     virtual void set_window_size(u32 w, u32 h) = 0;
 
     void set_process_to_high_priority() const;
+
+ private:
+#if defined(_WIN32)
+    void print_windows_error(LPCTSTR function_name) const;
+#endif
 };

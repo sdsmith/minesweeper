@@ -34,6 +34,7 @@
 # Modified by Stewart Smith.
 # Added new library locations (lib/<arch>)
 # Added SDL2_INCLUDE_DIRS for compatibility with later cmake find scripts.
+# Added SDL2_LIBRARIES for compatibility with later cmake find scripts.
 # Added change search from SDL.h to SDL2/SDL.h
 #
 # Modified by Eric Wing.
@@ -94,7 +95,7 @@ FIND_LIBRARY(SDL2_LIBRARY_TEMP
   NAMES SDL2
   HINTS
   $ENV{SDL2DIR}
-  PATH_SUFFIXES lib64 lib lib/x86 lib/x64
+  PATH_SUFFIXES lib64 lib lib/x64 lib/x86
   PATHS ${SDL2_SEARCH_PATHS} ${SDL2_INCLUDE_DIR}/../..
 )
 
@@ -108,7 +109,7 @@ IF(NOT SDL2_BUILDING_LIBRARY)
       NAMES SDL2main
       HINTS
       $ENV{SDL2DIR}
-      PATH_SUFFIXES lib64 lib
+      PATH_SUFFIXES lib64 lib lib/x64 lib/x86
       PATHS ${SDL2_SEARCH_PATHS}
     )
   ENDIF(NOT ${SDL2_INCLUDE_DIR} MATCHES ".framework")

@@ -4,6 +4,10 @@
 #    include <sys/resource.h>
 #    include <cerrno>
 #    include <cstring>
+#elif defined(_WIN32)
+#    include <Windows.h>
+#    include <strsafe.h>
+#    include <cstring>
 #endif
 
 void Platform::set_process_to_high_priority() const
@@ -33,7 +37,57 @@ void Platform::set_process_to_high_priority() const
     }
 
     printf("Set process nice level to %d (was %d)\n", nice_ceiling, cur_pri);
+
+#elif defined(_WIN32)
+    // TODO(stewarts): Must have PROCESS_SET_INFORMATION permission, check with
+    // GetSecurityInfo
+
+    if (!SetPriorityClass(GetCurrentProcess(), HIGH_PRIORITY_CLASS)) {
+        print_windows_error(TEXT("SetPriorityClass"));
+        return;
+    }
 #else
 #    error Platform not supported.
 #endif
 }
+
+#if defined(_WIN32)
+void Platform::print_windows_error(LPCTSTR function_name) const
+{
+    /*
+    // Retrieve error message from system
+    //
+    LPSTR msg_buf;
+    LPVOID display_buf;
+    DWORD dw = GetLastError();
+
+    FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM |
+                      FORMAT_MESSAGE_IGNORE_INSERTS,
+                  nullptr, dw, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+                  msg_buf, 0, nullptr);
+
+    // Print error message
+    //
+    display_buf = static_cast<LPVOID>(LocalAlloc(
+        LMEM_ZEROINIT, (std::strlen(msg_buf) +
+                        std::strlen(static_cast<LPCTSTR>(function_name)) + 40) *
+                           sizeof(TCHAR)));
+    if (!display_buf) {
+        printf("Failed to allocate buffer\n");
+        return;
+    }
+
+    StringCchPrintf(static_cast<LPTSTR>(display_buf), //-V111 -V576
+                    LocalSize(display_buf) / sizeof(TCHAR),
+                    TEXT("%s failed with error %d: %s"), function_name, dw,
+                    msg_buf);
+
+    static_assert(std::is_same<TCHAR, char>::value,
+                  "Unicode Windows strings are not compatible with the logger");
+    printf("%s\n", static_cast<char*>(display_buf));
+
+    LocalFree(msg_buf);
+    LocalFree(display_buf);
+    */
+}
+#endif

@@ -6,11 +6,11 @@
 #include <stb/stb_image.h>
 
 #ifdef _WIN32
-#include <GL/wglew.h> // Windows OpenGL extensions
+#    include <GL/wglew.h> // Windows OpenGL extensions
 #elif __linux__
-#include <GL/glxew.h> // Linux OpenGL extensions
+#    include <GL/glxew.h> // Linux OpenGL extensions
 #else
-#error "Unsupported OS"
+#    error "Unsupported OS"
 #endif
 
 #define __USE_MATH_DEFINES // For compatibility with old cmath #defines
@@ -50,9 +50,7 @@ bool OpenGl::check_gl_error(std::string const& description,
     std::string log;
 
     // Check if there was initially no error
-    if (error == GL_NO_ERROR) {
-        return false;
-    }
+    if (error == GL_NO_ERROR) { return false; }
 
     // Display each error in queue
     while (error != GL_NO_ERROR) {

@@ -11,16 +11,16 @@
 #include <string>
 
 #ifdef _DEBUG
-#define CHECK_GL_ERROR(description) \
-    OpenGL::checkGLError(description, __FILE__, __LINE__)
-#define GL_CHECK(statement)         \
-    do {                            \
-        statement;                  \
-        CHECK_GL_ERROR(#statement); \
-    } while (0)
+#    define CHECK_GL_ERROR(description) \
+        OpenGL::checkGLError(description, __FILE__, __LINE__)
+#    define GL_CHECK(statement)         \
+        do {                            \
+            statement;                  \
+            CHECK_GL_ERROR(#statement); \
+        } while (0)
 #else
-#define CHECK_GL_ERROR(description)
-#define GL_CHECK(statement) statement
+#    define CHECK_GL_ERROR(description)
+#    define GL_CHECK(statement) statement
 #endif
 
 // TODO(stewarts): Why do most of these functions return void???

@@ -2,6 +2,7 @@
 
 #include "input.h"
 #include "types.h"
+#include <cstdio>
 
 /**
    Platform interface.
@@ -26,4 +27,6 @@ public:
                                                   s32 window_height) = 0;
     virtual void swap_window_buffer() = 0;
     virtual void set_window_size(u32 w, u32 h) = 0;
+
+    void set_process_to_high_priority() const;
 };

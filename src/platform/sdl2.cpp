@@ -249,15 +249,11 @@ void Sdl2::process_keyboard_event(SDL_Event* event, bool key_down)
         } break;
 
         case SDLK_p: {
-            if (!key_down) {
-                game_state.toggle_pause = true;
-            }
+            if (!key_down) { game_state.toggle_pause = true; }
         } break;
 
         case SDLK_ESCAPE: {
-            if (!key_down) {
-                game_state.request_quit = true;
-            }
+            if (!key_down) { game_state.request_quit = true; }
         } break;
 
         default: {

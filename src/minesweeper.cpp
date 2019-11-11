@@ -26,8 +26,14 @@ public:
         assert(width > 0);
     }
 
-    [[nodiscard]] s32 length() const { return static_cast<s32>(m_board.size()); }
-    [[nodiscard]] s32 width() const { return static_cast<s32>(m_board[0].size()); }
+    [[nodiscard]] s32 length() const
+    {
+        return static_cast<s32>(m_board.size());
+    }
+    [[nodiscard]] s32 width() const
+    {
+        return static_cast<s32>(m_board[0].size());
+    }
 
     [[nodiscard]] char get(s32 x, s32 y) const
     {
@@ -60,9 +66,7 @@ void update_mine_adjacent_counts(Grid& board, s32 x, s32 y)
     for (s32 dy = -1; dy <= 1; ++dy) {
         for (s32 dx = -1; dx <= 1; ++dx) {
             // Don't update self
-            if (dx == 0 && dy == 0) {
-                continue;
-            }
+            if (dx == 0 && dy == 0) { continue; }
 
             const s32 adj_x = x + dx;
             const s32 adj_y = y + dy;
@@ -74,9 +78,7 @@ void update_mine_adjacent_counts(Grid& board, s32 x, s32 y)
             }
 
             // Don't update mine locations
-            if (board.get(adj_x, adj_y) == mine_val) {
-                continue;
-            }
+            if (board.get(adj_x, adj_y) == mine_val) { continue; }
 
             board.get(adj_x, adj_y)++;
         }
@@ -176,6 +178,8 @@ int main(int, char*[])
     constexpr f32 target_fps = 60.0f;
     constexpr f32 target_frame_time_ms = 1000.0f / target_fps;
 
+    // Init
+    platform->set_process_to_high_priority();
     renderer->proto_setup();
 
     while (running) {
@@ -195,17 +199,22 @@ int main(int, char*[])
 
             update(input);
 
-            frame_time_ms =
-                static_cast<f32>((static_cast<f64>(platform->get_performance_counter() - perf_sys_start_frame) * 1000.0) /
-                                 static_cast<f64>(perf_frequency));
+            frame_time_ms = static_cast<f32>(
+                (static_cast<f64>(platform->get_performance_counter() -
+                                  perf_sys_start_frame) *
+                 1000.0) /
+                static_cast<f64>(perf_frequency));
+            // printf("STEWART: frame time of target - %fms/%fms\n",
+            // frame_time_ms, target_frame_time_ms);
         } while (frame_time_ms < target_frame_time_ms);
 
         render(renderer.get());
 
         perf_end_frame = platform->get_performance_counter();
         perf_sys_count = perf_end_frame - perf_sys_start_frame;
-        perf_sys_time_ms = static_cast<f32>((static_cast<f64>(perf_sys_count) * 1000.0) /
-                                            static_cast<f64>(perf_frequency));
+        perf_sys_time_ms =
+            static_cast<f32>((static_cast<f64>(perf_sys_count) * 1000.0) /
+                             static_cast<f64>(perf_frequency));
         perf_process_count = perf_end_frame - perf_process_start_frame;
         perf_process_time_ms =
             static_cast<f32>((static_cast<f64>(perf_process_count) * 1000.0) /

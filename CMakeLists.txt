@@ -6,10 +6,12 @@
 cmake_minimum_required(VERSION 3.10.2)
 project(minesweeper)
 
-# Force 64bit. On Windows, Visual Studio does not advertise it's support
-# platform in CMAKE_GENERATOR causing the find scripts to locate the wrong
-# libraries.
-set(CMAKE_GENERATOR_PLATFORM x64)
+if (WIN32)
+  # Force 64bit. On Windows, Visual Studio does not advertise it's support
+  # platform in CMAKE_GENERATOR causing the find scripts to locate the wrong
+  # libraries.
+  set(CMAKE_GENERATOR_PLATFORM x64)
+endif()
 
 set(source_dir "${CMAKE_CURRENT_SOURCE_DIR}/src")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ..)

@@ -165,12 +165,9 @@ int main(int, char*[])
     bool pause = false;
 
     // Performance stats
-    u64 perf_sys_start_frame;
+    u64 perf_start_frame;
     u64 perf_sys_count;
     f32 perf_sys_time_ms;
-    u64 perf_process_start_frame;
-    u64 perf_process_count;
-    f32 perf_process_time_ms;
     u64 perf_end_frame;
     s32 perf_fps;
     u64 perf_frequency = platform->get_performance_frequency();
@@ -183,8 +180,7 @@ int main(int, char*[])
     renderer->proto_setup();
 
     while (running) {
-        perf_sys_start_frame = platform->get_performance_counter();
-        perf_process_start_frame = platform->get_performance_counter();
+        perf_start_frame = platform->get_performance_counter();
 
         f32 frame_time_ms = 0.0f;
         do {
@@ -201,7 +197,7 @@ int main(int, char*[])
 
             frame_time_ms = static_cast<f32>(
                 (static_cast<f64>(platform->get_performance_counter() -
-                                  perf_sys_start_frame) *
+                                  perf_start_frame) *
                  1000.0) /
                 static_cast<f64>(perf_frequency));
             // printf("STEWART: frame time of target - %fms/%fms\n",
@@ -211,18 +207,13 @@ int main(int, char*[])
         render(renderer.get());
 
         perf_end_frame = platform->get_performance_counter();
-        perf_sys_count = perf_end_frame - perf_sys_start_frame;
+        perf_sys_count = perf_end_frame - perf_start_frame;
         perf_sys_time_ms =
             static_cast<f32>((static_cast<f64>(perf_sys_count) * 1000.0) /
                              static_cast<f64>(perf_frequency));
-        perf_process_count = perf_end_frame - perf_process_start_frame;
-        perf_process_time_ms =
-            static_cast<f32>((static_cast<f64>(perf_process_count) * 1000.0) /
-                             static_cast<f64>(perf_frequency));
         perf_fps = static_cast<s32>(1 / (perf_sys_time_ms / 1000));
-        perf_sys_start_frame = perf_end_frame;
-        printf("frame: %fms (%fms in process) (%d fps)\n", perf_sys_time_ms,
-               perf_process_time_ms, perf_fps);
+        perf_start_frame = perf_end_frame;
+        printf("frame: %fms (%d fps)\n", perf_sys_time_ms, perf_fps);
     }
 
     return 0;

@@ -179,9 +179,8 @@ int main(int, char*[])
     platform->set_process_to_high_priority();
     renderer->proto_setup();
 
+    perf_start_frame = platform->get_performance_counter();
     while (running) {
-        perf_start_frame = platform->get_performance_counter();
-
         render(renderer.get());
 
         f32 frame_time_ms = 0.0f;

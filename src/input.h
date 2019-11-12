@@ -25,11 +25,13 @@ struct Game_Input_Controller {
     };
 };
 /*
-static_assert(offsetof(Game_Input_Controller, buttons[0]) == offsetof(Game_Input_Controller, up) &&
-              offsetof(Game_Input_Controller, buttons[1]) == offsetof(Game_Input_Controller, down) &&
-              offsetof(Game_Input_Controller, buttons[2]) == offsetof(Game_Input_Controller, left) &&
-              offsetof(Game_Input_Controller, buttons[3]) == offsetof(Game_Input_Controller, right),
-              "Alignment of controller input union does not match.");
+static_assert(offsetof(Game_Input_Controller, buttons[0]) ==
+offsetof(Game_Input_Controller, up) && offsetof(Game_Input_Controller,
+buttons[1]) == offsetof(Game_Input_Controller, down) &&
+              offsetof(Game_Input_Controller, buttons[2]) ==
+offsetof(Game_Input_Controller, left) && offsetof(Game_Input_Controller,
+buttons[3]) == offsetof(Game_Input_Controller, right), "Alignment of controller
+input union does not match.");
 */
 
 struct Game_State {

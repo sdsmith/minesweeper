@@ -5,7 +5,7 @@
 #include <cstdio>
 
 #if defined(_WIN32)
-#   include <Windows.h>
+#    include <Windows.h>
 #endif
 
 /**
@@ -34,7 +34,7 @@ public:
 
     void set_process_to_high_priority() const;
 
- private:
+private:
 #if defined(_WIN32)
     void print_windows_error(LPCTSTR function_name) const;
 #endif

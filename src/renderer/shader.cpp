@@ -54,11 +54,12 @@ void ShaderFile::compile_shader(GLenum shader_type)
         GL_CHECK(glGetShaderiv(shader_id, GL_INFO_LOG_LENGTH, &log_length));
         if (log_length <= 0) {
             std::cout << "ERROR::SHADER::FILE::COMPILATION_FAILED: <unable to "
-                "get error message>\n";
+                         "get error message>\n";
             return;
         }
         std::vector<GLchar> info_log(static_cast<u32>(log_length), '\0');
-        GL_CHECK(glGetShaderInfoLog(shader_id, log_length, nullptr, info_log.data()));
+        GL_CHECK(glGetShaderInfoLog(shader_id, log_length, nullptr,
+                                    info_log.data()));
         std::cout << "ERROR::SHADER::FILE::COMPILATION_FAILED\n"
                   << info_log.data() << std::endl;
     }
@@ -77,17 +78,11 @@ FragmentShader::FragmentShader(std::string const &file_path)
 
 Shader::Shader(std::string const &vertex_file_path,
                std::string const &fragment_file_path)
-    : program_id(0)
-{
-    VertexShader v_shader(vertex_file_path);
-    FragmentShader f_shader(fragment_file_path);
-
-    Shader(v_shader, f_shader);
-}
+    : Shader(VertexShader(vertex_file_path), FragmentShader(fragment_file_path))
+{}
 
 Shader::Shader(VertexShader const &vertex_shader,
                FragmentShader const &fragment_shader)
-    : program_id(0)
 {
     // Link shaders and create program
     program_id = glCreateProgram();
@@ -103,12 +98,12 @@ Shader::Shader(VertexShader const &vertex_shader,
         GL_CHECK(glGetProgramiv(program_id, GL_INFO_LOG_LENGTH, &log_length));
         if (log_length <= 0) {
             std::cout << "ERROR::SHADER::FILE::COMPILATION_FAILED: <unable to "
-                "get error message>\n";
+                         "get error message>\n";
             return;
         }
         std::vector<GLchar> info_log(static_cast<u32>(log_length), '\0');
-        GL_CHECK(
-            glGetProgramInfoLog(program_id, log_length, nullptr, info_log.data()));
+        GL_CHECK(glGetProgramInfoLog(program_id, log_length, nullptr,
+                                     info_log.data()));
         std::cout << "ERROR::SHADER::PROGRAM::LINK_FAILED\n"
                   << info_log.data() << std::endl;
     }

@@ -45,7 +45,7 @@ public:
     static void disable();
 
 private:
-    GLuint program_id;
+    GLuint program_id = 0;
 };
 
 #endif

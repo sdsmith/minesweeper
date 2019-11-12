@@ -182,6 +182,8 @@ int main(int, char*[])
     while (running) {
         perf_start_frame = platform->get_performance_counter();
 
+        render(renderer.get());
+
         f32 frame_time_ms = 0.0f;
         do {
             // Collect system event information
@@ -203,8 +205,6 @@ int main(int, char*[])
             // printf("STEWART: frame time of target - %fms/%fms\n",
             // frame_time_ms, target_frame_time_ms);
         } while (frame_time_ms < target_frame_time_ms);
-
-        render(renderer.get());
 
         perf_end_frame = platform->get_performance_counter();
         perf_sys_count = perf_end_frame - perf_start_frame;

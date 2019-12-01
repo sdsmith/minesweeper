@@ -1,5 +1,6 @@
 #include "platform/sdl2.h"
 
+#include <cassert>
 #include <system_error>
 
 Sdl2::Sdl2() : input(), new_input(input), old_input(input + 1)
@@ -94,6 +95,8 @@ void Sdl2::process_sys_event_queue()
     prepare_for_new_input();
 
     // Loop through waiting events
+    // TODO(stewarts): Use SDL_WaitEvent to save power when the window is not
+    // active.
     while (SDL_PollEvent(&event)) {
         // Handle event
         switch (event.type) {
@@ -111,6 +114,17 @@ void Sdl2::process_sys_event_queue()
 
             case SDL_WINDOWEVENT: {
                 process_window_event(&event.window);
+            } break;
+
+            case SDL_MOUSEBUTTONDOWN:
+                // case SDL_MOUSEBUTTONUP:
+                {
+                    process_mouse_button_event(event);
+                }
+                break;
+
+            case SDL_MOUSEMOTION: {
+                process_mouse_motion_event(event);
             } break;
 
             default: {
@@ -265,4 +279,41 @@ void Sdl2::process_input_button(Game_Input_Button* button, bool button_down)
 {
     button->ended_down = button_down;
     button->half_transitions++;
+}
+
+// TODO(stewarts): seems like event.mouse.x
+void Sdl2::process_mouse_button_event(const SDL_Event& event) const
+{
+    assert(event.type == SDL_MOUSEBUTTONDOWN ||
+           event.type == SDL_MOUSEBUTTONUP);
+
+    const SDL_MouseButtonEvent& button = event.button;
+
+    // NOTE(stewarts): event.state => SDL_PRESSED, SDL_RELEASED
+    // NOTE(stewarts): event.x, event.y
+
+    const char* button_str = "unknown";
+    switch (button.button) {
+        case SDL_BUTTON_LEFT: {
+            button_str = "left";
+        } break;
+
+        case SDL_BUTTON_MIDDLE: {
+            button_str = "middle";
+        } break;
+
+        case SDL_BUTTON_RIGHT: {
+            button_str = "right";
+        } break;
+
+        default: {
+        } break;
+    }
+
+    printf("mouse button %s: (%d, %d)\n", button_str, button.x, button.y);
+}
+
+void Sdl2::process_mouse_motion_event(const SDL_Event& event) const
+{
+    assert(event.type == SDL_MOUSEMOTION);
 }

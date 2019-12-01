@@ -41,4 +41,6 @@ private:
     void process_window_event(SDL_WindowEvent* event);
     void process_keyboard_event(SDL_Event* event, bool key_down);
     void process_input_button(Game_Input_Button* button, bool button_down);
+    void process_mouse_button_event(const SDL_Event& event) const;
+    void process_mouse_motion_event(const SDL_Event& event) const;
 };

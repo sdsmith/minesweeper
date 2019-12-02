@@ -116,12 +116,13 @@ void Sdl2::process_sys_event_queue()
                 process_window_event(&event.window);
             } break;
 
-            case SDL_MOUSEBUTTONDOWN:
-                // case SDL_MOUSEBUTTONUP:
-                {
-                    process_mouse_button_event(event);
-                }
-                break;
+            case SDL_MOUSEBUTTONDOWN: {
+                process_mouse_button_event(event, true);
+            } break;
+
+            case SDL_MOUSEBUTTONUP: {
+                process_mouse_button_event(event, false);
+            } break;
 
             case SDL_MOUSEMOTION: {
                 process_mouse_motion_event(event);
@@ -275,19 +276,20 @@ void Sdl2::process_keyboard_event(SDL_Event* event, bool key_down)
     }
 }
 
-void Sdl2::process_input_button(Game_Input_Button* button, bool button_down)
+void Sdl2::process_input_button(Game_Input_Button* button, bool button_down) const
 {
     button->ended_down = button_down;
     button->half_transitions++;
 }
 
 // TODO(stewarts): seems like event.mouse.x
-void Sdl2::process_mouse_button_event(const SDL_Event& event) const
+void Sdl2::process_mouse_button_event(const SDL_Event& event, bool key_down)
 {
     assert(event.type == SDL_MOUSEBUTTONDOWN ||
            event.type == SDL_MOUSEBUTTONUP);
 
     const SDL_MouseButtonEvent& button = event.button;
+    Game_Input_Mouse& mouse = new_input->controllers[Controller::keyboard].mouse;
 
     // NOTE(stewarts): event.state => SDL_PRESSED, SDL_RELEASED
     // NOTE(stewarts): event.x, event.y
@@ -295,14 +297,17 @@ void Sdl2::process_mouse_button_event(const SDL_Event& event) const
     const char* button_str = "unknown";
     switch (button.button) {
         case SDL_BUTTON_LEFT: {
+            process_input_button(&mouse.left, key_down);
             button_str = "left";
         } break;
 
         case SDL_BUTTON_MIDDLE: {
+            process_input_button(&mouse.middle, key_down);
             button_str = "middle";
         } break;
 
         case SDL_BUTTON_RIGHT: {
+            process_input_button(&mouse.right, key_down);
             button_str = "right";
         } break;
 
@@ -313,7 +318,7 @@ void Sdl2::process_mouse_button_event(const SDL_Event& event) const
     printf("mouse button %s: (%d, %d)\n", button_str, button.x, button.y);
 }
 
-void Sdl2::process_mouse_motion_event(const SDL_Event& event) const
+void Sdl2::process_mouse_motion_event(const SDL_Event& event)
 {
     assert(event.type == SDL_MOUSEMOTION);
 }

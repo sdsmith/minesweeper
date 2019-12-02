@@ -13,6 +13,23 @@ struct Game_Input_Button {
     s32 half_transitions;
 };
 
+struct Game_Input_Mouse {
+    union {
+        Game_Input_Button buttons[3];
+        struct {
+            Game_Input_Button left;
+            Game_Input_Button right;
+            Game_Input_Button middle;
+        };
+    };
+};
+#ifndef _MSC_VER
+static_assert(offsetof(Game_Input_Mouse, buttons[0]) == offsetof(Game_Input_Mouse, left)
+              && offsetof(Game_Input_Mouse, buttons[1]) == offsetof(Game_Input_Mouse, right)
+              && offsetof(Game_Input_Mouse, buttons[2]) == offsetof(Game_Input_Mouse, middle),
+              "Alignment of mouse input union does not match.");
+#endif
+
 struct Game_Input_Controller {
     union {
         Game_Input_Button buttons[4];
@@ -23,6 +40,7 @@ struct Game_Input_Controller {
             Game_Input_Button right;
         };
     };
+    Game_Input_Mouse mouse;
 };
 #ifndef _MSC_VER
 static_assert(offsetof(Game_Input_Controller, buttons[0]) == offsetof(Game_Input_Controller, up)

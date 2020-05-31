@@ -20,7 +20,7 @@ CXXFLAGS.release := -DNDEBUG -O2
 CXXFLAGS += $(CXXFLAGS.$(BUILD))
 
 ### Warning flags
-WARN_FLAGS = -Wall -Werror -Wextra -Weffc++ -Wfloat-equal -Werror-implicit-function-declaration -Wundef -Wpointer-arith -Wcast-align -Wstrict-overflow=4 -Wwrite-strings -Wno-unused-result
+WARN_FLAGS = -Wall -Werror -Wextra -Weffc++ -Wfloat-equal -Wundef -Wpointer-arith -Wcast-align -Wstrict-overflow=4 -Wwrite-strings -Wno-unused-result
 # Potentially noisy and not worth it
 WARN_FLAGS += -Wcast-qual -Wswitch-default -Wswitch-enum -Wconversion -Wunreachable-code
 

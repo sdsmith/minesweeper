@@ -9,6 +9,8 @@ project(minesweeper)
 set(source_dir src)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ..)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # Dependencies
 #
 find_package(GLEW REQUIRED)

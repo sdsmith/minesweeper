@@ -1,3 +1,7 @@
 /build
 minesweeper.link.*
 .cquery_cached_index
+/artifacts
+/minesweeper
+compile_commands.json
+

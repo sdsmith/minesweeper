@@ -2,50 +2,50 @@
 #define SHADER_HPP
 
 #include <GL/glew.h>
-#include <string>
 #include <fstream>
 #include <sstream>
+#include <string>
 
+// TODO(stewarts): Why do most of these functions return void???
 
 class ShaderFile {
 public:
-    ShaderFile(std::string const &filePath);
-    ~ShaderFile(void);
+    ShaderFile(std::string file_path);
+    ~ShaderFile();
 
-    GLuint getID(void) const;
-    
+    [[nodiscard]] GLuint get_id() const;
+
 protected:
-    std::string filePath;
-    GLuint shaderID;
+    std::string file_path;
+    GLuint shader_id;
 
-    void compileShader(GLenum shaderType);
+    void compile_shader(GLenum shader_type);
 };
-
 
 class VertexShader : public ShaderFile {
 public:
-    VertexShader(std::string const &filePath);
+    VertexShader(std::string const &file_path);
 };
-
 
 class FragmentShader : public ShaderFile {
 public:
     FragmentShader(std::string const &filepath);
 };
 
-
 class Shader {
 public:
-    Shader(std::string const &vertexFilePath, std::string const &fragmentFilePath);
-    Shader(VertexShader const &vertexShader, FragmentShader const &fragmentShader);
-    ~Shader(void);
+    Shader(std::string const &vertex_file_path,
+           std::string const &fragment_file_path);
+    Shader(VertexShader const &vertex_shader,
+           FragmentShader const &fragment_shader);
+    ~Shader();
 
-    GLuint getID(void) const;
-    void enable(void);
-    static void disable(void);
-    
+    [[nodiscard]] GLuint get_id() const;
+    void enable();
+    static void disable();
+
 private:
-    GLuint programID;
+    GLuint program_id;
 };
 
 #endif
